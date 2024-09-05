@@ -5,8 +5,12 @@
 package NFS.services;
 
 import NFS.interfaz.RMIArchivosInterfaz;
+import NFS.Modelo.UserManager;
+import NFS.Modelo.NotificationServer;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.rmi.RemoteException;
-import java.util.List;
 import java.rmi.server.UnicastRemoteObject;
 
 /**
@@ -15,20 +19,5 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class ServicioArchivos extends UnicastRemoteObject implements RMIArchivosInterfaz{
 
-  public ServicioArchivos() throws RemoteException {
-    super();
-  }
-    
-    /*
-    @Override
-    public List<Object[]> getNews() throws RemoteException {
-        Controlador c = new Controlador();
-        return c.listaNoticias();
-    }*/
-  
-
-    
-
-    
-
+ 
 }
