@@ -1,5 +1,6 @@
 package NFS;
 
+import NFS.interfaz.RMIUsers;
 import java.rmi.Naming;
 import java.util.List;
 
@@ -11,16 +12,15 @@ public class Client {
     this.url = "rmi://" + ip + ":" + port + "/" + serviceName;
   }
 
-  /*
-  public List<Object[]> getNoticias(){
-      try {
-          RMINEWS nwsService= (RMINEWS) Naming.lookup(this.url);
-          return nwsService.getNews();
-      } catch (Exception e) {
+ public int loginUser(String name,String password){
+        try {
+          RMIUsers usrService= (RMIUsers) Naming.lookup(this.url);
+          return usrService.loginUser(name, password);
+        } catch (Exception e) {
           e.printStackTrace();
-      }
-      return null;
-    }*/
+        }
+        return 0;
+    }
   
 
     

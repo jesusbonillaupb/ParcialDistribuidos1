@@ -1,26 +1,26 @@
 
 package NFS.services;
 
-import NFS.Modelo.UserManager;
+import NFS.Modelo.UserCrud;
 import NFS.Sockets.ClientHandler;
-import NFS.interfaz.DocumentService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import NFS.interfaz.RMIDocuments;
 
-public class DocumentServiceImpl extends UnicastRemoteObject implements DocumentService {
+public class DocumentsService extends UnicastRemoteObject implements RMIDocuments {
 
     private static final String NFS_MOUNT_POINT = "/mnt/nfs_share";
 
-    public DocumentServiceImpl() throws RemoteException {
+    public DocumentsService() throws RemoteException {
         super();
     }
 
     @Override
     public String readFile(String username, String filePath) throws RemoteException {
-        if (UserManager.checkUserPermission(username, filePath, "read")) {
+        if (UserCrud.checkUserPermission(username, filePath, "read")) {
             try {
                 byte[] bytes = Files.readAllBytes(Paths.get(NFS_MOUNT_POINT, filePath));
                 return new String(bytes);
@@ -34,7 +34,7 @@ public class DocumentServiceImpl extends UnicastRemoteObject implements Document
 
     @Override
     public void writeFile(String username, String filePath, String content) throws RemoteException {
-        if (UserManager.checkUserPermission(username, filePath, "write")) {
+        if (UserCrud.checkUserPermission(username, filePath, "write")) {
             try {
                 Files.write(Paths.get(NFS_MOUNT_POINT, filePath), content.getBytes());
                 ClientHandler.notifyClients("File created/modified: " + filePath);

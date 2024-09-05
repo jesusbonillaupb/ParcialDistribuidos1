@@ -8,6 +8,6 @@ package NFS.Modelo;
  *
  * @author Jesus
  */
-public class DocumentManager {
+public class DocumentCrud {
     
 }

@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserManager {
+public class UserCrud {
 
     static ConexionBD conectar = new ConexionBD();
     static Connection con;
@@ -17,12 +17,12 @@ public class UserManager {
     static ResultSet rs;
     
     // retorna el id del usuario con el cual podra hacer las operaciones
-    public List autnenticateUser(String name,String password){
+    public List login(String name,String password){
         List<User>datos = new ArrayList<>();
-        String sql = "SELECT * FROM usuarios WHERE usNombre=? && usPassword=?";
+        String query = "SELECT * FROM usuarios WHERE usNombre=? && usPassword=?";
         try {
             con= conectar.getConnection();
-            ps=con.prepareStatement(sql);
+            ps=con.prepareStatement(query);
             ps.setString(1, name);         
             ps.setString(2, password);
             rs=ps.executeQuery();
@@ -33,10 +33,10 @@ public class UserManager {
                 us.setId(rs.getInt(1));
                 us.setName(rs.getString(2));
                 us.setPassword(rs.getString(3));
+                us.setRole(rs.getString(4));
                 datos.add(us);    
-                
-                
             }
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

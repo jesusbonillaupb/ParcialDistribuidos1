@@ -5,8 +5,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.Remote;
 import java.util.HashMap;
 import java.util.Map;
-import NFS.interfaz.DocumentService;
-import NFS.services.DocumentServiceImpl;
+import NFS.services.DocumentsService;
+import NFS.interfaz.RMIDocuments;
 
 public class Server {
     private String ip;
