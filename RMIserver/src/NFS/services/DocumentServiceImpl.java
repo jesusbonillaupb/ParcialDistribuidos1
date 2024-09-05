@@ -2,8 +2,8 @@
 package NFS.services;
 
 import NFS.Modelo.UserManager;
+import NFS.Sockets.ClientHandler;
 import NFS.interfaz.DocumentService;
-import NFS.Modelo.NotificationServer;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -37,7 +37,7 @@ public class DocumentServiceImpl extends UnicastRemoteObject implements Document
         if (UserManager.checkUserPermission(username, filePath, "write")) {
             try {
                 Files.write(Paths.get(NFS_MOUNT_POINT, filePath), content.getBytes());
-                NotificationServer.notifyClients("File created/modified: " + filePath);
+                ClientHandler.notifyClients("File created/modified: " + filePath);
             } catch (IOException e) {
                 throw new RemoteException("Error writing file", e);
             }
