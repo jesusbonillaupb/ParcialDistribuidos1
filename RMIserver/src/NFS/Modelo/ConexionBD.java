@@ -13,8 +13,10 @@ import java.sql.DriverManager;
 public class ConexionBD {
     Connection con;
     public Connection getConnection(){
+        //crear una bd llamada sgd en myworkbench 
         String url= "jdbc:mysql://localhost:3306/sgd";
         String user= "root";
+        //cambiar por la contraseña que tenga su usuario root en mysqlWorkbench
         String pass= "password";
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
