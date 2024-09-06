@@ -16,6 +16,28 @@ public class UserCrud {
     static PreparedStatement ps;
     static ResultSet rs;
     
+    public List listar(){
+        List<User>datos = new ArrayList<>();
+        String sql = "SELECT * FROM usuarios";
+        try {
+            con= conectar.getConnection();
+            ps=con.prepareStatement(sql);
+            rs=ps.executeQuery();
+            while (rs.next()) {
+                User us = new User();
+                us.setId(rs.getInt(1));
+                us.setName(rs.getString(2));
+                us.setPassword(rs.getString(3));
+                us.setRole(rs.getString(4));
+                datos.add(us);
+                
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return datos;    
+    }
+    
     // retorna el id del usuario con el cual podra hacer las operaciones
     public List login(String name,String password){
         List<User>datos = new ArrayList<>();
@@ -42,6 +64,101 @@ public class UserCrud {
         }
         return datos;    
     }
+    
+    public List rolUsuario(int id){
+        List<User>datos = new ArrayList<>();
+        String sql = "SELECT * FROM usuarios WHERE idUsuario=?";
+        try {
+            con= conectar.getConnection();
+            ps=con.prepareStatement(sql);
+            ps.setInt(1, id);         
+            
+            rs=ps.executeQuery();
+            while (rs.next()) {  
+                User us = new User();
+                us.setId(rs.getInt(1));
+                us.setName(rs.getString(2));
+                us.setPassword(rs.getString(3));
+                us.setRole(rs.getString(4));
+                datos.add(us);    
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return datos;    
+    }
+    
+    public boolean agregar(String nombre, String password,String rol) {
+    String sql = "INSERT INTO usuarios (usNombre, usPassword,usRol) VALUES (?, ?,?);";
+    try {
+        con = conectar.getConnection();  
+        ps = con.prepareStatement(sql);  
+        ps.setString(1, nombre);         
+        ps.setString(2, password);
+        ps.setString(3, rol);
+        ps.executeUpdate();              
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    } finally {
+        try {
+            if (ps != null) ps.close();  
+            if (con != null) con.close(); 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    return true;
+    }
+    
+    public boolean actualizar(int id, String name, String password,String rol) {
+    String sql = "UPDATE usuarios SET usNombre=?, usPassword=?, usRol=? WHERE idUsuario=?;";
+    try {
+        con = conectar.getConnection();  
+        ps = con.prepareStatement(sql);  
+        ps.setString(1, name);         
+        ps.setString(2, password);
+        ps.setString(3, rol);
+        ps.setInt(4,id);
+        ps.executeUpdate();              
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    } finally {
+        try {
+            if (ps != null) ps.close();  
+            if (con != null) con.close(); 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    return true;
+    }
+    
+    public boolean borrar(int id) {
+    String sql = "DELETE FROM usuarios WHERE idUsuario=?;";
+    try {
+        con = conectar.getConnection();  
+        ps = con.prepareStatement(sql);  
+        ps.setInt(1,id);
+        ps.executeUpdate();              
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    } finally {
+        try {
+            if (ps != null) ps.close();  
+            if (con != null) con.close(); 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    return true;
+    }
+    
     
     public static boolean checkUserPermission(String username, String resource, String permissionType) {
         String query = "SELECT p.can_read, p.can_write FROM permissions p " +
@@ -114,4 +231,8 @@ public class UserCrud {
             return false;
         }
     }
+
+    
+    
+    
 }

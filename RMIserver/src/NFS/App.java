@@ -28,8 +28,8 @@ public class App {
             }
             
             // Despliega el notification server
-            NotificationServer notificationServer = new NotificationServer();
-            notificationServer.deploy();
+            // NotificationServer notificationServer = new NotificationServer();
+            // notificationServer.deploy();
         } catch (Exception e) {
             e.printStackTrace();
         }

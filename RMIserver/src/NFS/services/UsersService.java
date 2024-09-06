@@ -26,23 +26,33 @@ public class UsersService extends UnicastRemoteObject implements RMIUsers{
     }
 
     @Override
-    public boolean RegisterUser(String name, String password) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean RegisterUser(String name, String password,String rol) throws RemoteException {
+        Controlador c = new Controlador();
+        return c.agreagarUsuario(name, password,rol);
     }
 
     @Override
     public boolean DeleteUser(int id) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Controlador c=new Controlador();
+        return c.eliminarUsuario(id);
     }
 
     @Override
-    public boolean UpdateUser(int id, String name, String password) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean UpdateUser(int id, String name, String password,String rol) throws RemoteException {
+        Controlador c = new Controlador();
+        return c.actualizarUsuario(id, name, password, rol);
     }
 
     @Override
     public List<Object[]> getUsuarios() throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Controlador c =new Controlador();
+       return c.listar();
+    }
+
+    @Override
+    public String getRole(int id) throws RemoteException {
+        Controlador c= new Controlador();
+        return c.getRol(id);
     }
     
     

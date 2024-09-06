@@ -5,6 +5,8 @@
 package NFS.UI;
 
 import NFS.Client;
+import NFS.UI.vistasAdmin.InicioAdmin;
+import NFS.UI.vistasUsuario.InicioUsuario;
 
 
 
@@ -125,13 +127,28 @@ public class Login extends javax.swing.JFrame {
         if(txtNombre.getText().isEmpty()|| txtNombre.getText().isEmpty()){
             lblError.setText("Llena todos los campos");
             lblError.setVisible(true);
-        }else{   
+        }else{
             if(loginUser(txtNombre.getText(), txtPassword.getText())==0){
                 lblError.setText("Contraseña o usuario incorrecto");
                 lblError.setVisible(true);
 
             }else{
-                // Si el login es exitoso, lleva el usuario a la vista principal dependiendo del rol
+                int id = loginUser(txtNombre.getText(), txtPassword.getText());
+                if(getRole(id).equals("Admin")){
+                    System.out.println("Bienvenido Admin");
+                    // Enviar a la vista Admin inicio
+                    InicioAdmin inicioAdmin=new InicioAdmin(id,txtNombre.getText(),"Admin");
+                    this.setVisible(false);
+                    inicioAdmin.setLocationRelativeTo(null); 
+                    inicioAdmin.setVisible(true);
+                }else if(getRole(id).equals("Usuario")){
+                    System.out.println("Bienvenido Usuario");
+                    InicioUsuario inicioUsuario= new InicioUsuario(id,txtNombre.getText(),"Usuario");
+                    this.setVisible(false);
+                    inicioUsuario.setLocationRelativeTo(null); 
+                    inicioUsuario.setVisible(true);
+                }
+                
             }
         }
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -177,6 +194,12 @@ public class Login extends javax.swing.JFrame {
     public int loginUser(String name,String password){
         Client client = new Client("localhost", "1099", "UsrService");
         return client.loginUser(name, password); 
+        
+    }
+    
+    public String getRole(int id){
+        Client client = new Client("localhost", "1099", "UsrService");
+        return client.getRol(id); 
         
     }
 

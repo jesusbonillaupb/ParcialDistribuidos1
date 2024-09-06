@@ -17,7 +17,7 @@ public class ConexionBD {
         String url= "jdbc:mysql://localhost:3306/sgd";
         String user= "root";
         //cambiar por la contraseña que tenga su usuario root en mysqlWorkbench
-        String pass= "password";
+        String pass= "1234";
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(url,user,pass);
