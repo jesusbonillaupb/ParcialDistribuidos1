@@ -72,22 +72,4 @@ public class Client {
       }
       return null;
     }
-
-
-            out.println(username);
-
-            // Escuchar notificaciones
-            String message;
-            while ((message = in.readLine()) != null) {
-                System.out.println("Notification: " + message);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void main(String[] args) {
-        Client client = new Client("localhost", "1099", "DocumentService", "username"); // Reemplazar con el nombre de usuario real
-        client.start();
-    }
 }

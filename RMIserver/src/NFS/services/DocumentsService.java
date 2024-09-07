@@ -1,6 +1,8 @@
 package NFS.services;
 
 import NFS.Modelo.UserCrud;
+import NFS.Modelo.UserManager;
+import NFS.Sockets.NotificationServer;
 import NFS.Sockets.ClientHandler;
 import java.io.IOException;
 import java.nio.file.Files;
