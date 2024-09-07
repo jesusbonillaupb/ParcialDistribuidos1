@@ -21,7 +21,6 @@ public class Client {
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
-            // Enviar el nombre de usuario al servidor
             out.println(username);
 
             // Escuchar notificaciones
