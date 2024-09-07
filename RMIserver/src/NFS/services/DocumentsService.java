@@ -1,7 +1,6 @@
 package NFS.services;
 
 import NFS.Modelo.UserCrud;
-import NFS.Modelo.UserManager;
 import NFS.Sockets.NotificationServer;
 import NFS.Sockets.ClientHandler;
 import java.io.IOException;
@@ -41,8 +40,8 @@ public class DocumentsService extends UnicastRemoteObject implements RMIDocument
                 Files.write(Paths.get(NFS_MOUNT_POINT, filePath), content.getBytes());
                 
                 // Notificar al propietario y a los usuarios compartidos
-                String owner = UserManager.getFileOwner(filePath);
-                List<String> sharedUsers = UserManager.getSharedUsers(filePath);
+                String owner = UserCrud.getFileOwner(filePath);
+                List<String> sharedUsers = UserCrud.getSharedUsers(filePath);
 
                 NotificationServer.notifyClients(owner, "Your document " + filePath + " has been modified.");
                 for (String user : sharedUsers) {
