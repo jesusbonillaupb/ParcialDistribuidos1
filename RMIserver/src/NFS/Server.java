@@ -5,8 +5,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.Remote;
 import java.util.HashMap;
 import java.util.Map;
-import NFS.interfaz.DocumentService;
-import NFS.services.DocumentServiceImpl;
+import NFS.services.DocumentsService;
+import NFS.interfaz.RMIDocuments;
 
 public class Server {
     private String ip;
@@ -42,24 +42,5 @@ public class Server {
         }
         return false;
     }
-    public static void main(String[] args) {
-        try {
-            String ip = "localhost";
-            String port = "1099";
-            Server server = new Server(ip, port);
-
-            // Crear e implementar el servicio DocumentService
-            DocumentService documentService = new DocumentServiceImpl();
-            server.addService("DocumentService", documentService);
-
-            // Desplegar todos los servicios
-            if (server.deploy()) {
-                System.out.println("Todos los servicios se han desplegado correctamente.");
-            } else {
-                System.out.println("Error al desplegar los servicios.");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    
 }
