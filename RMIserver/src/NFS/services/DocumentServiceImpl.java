@@ -1,4 +1,3 @@
-
 package NFS.services;
 
 import NFS.Modelo.UserManager;
@@ -9,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 
 public class DocumentServiceImpl extends UnicastRemoteObject implements DocumentService {
 
@@ -37,7 +37,15 @@ public class DocumentServiceImpl extends UnicastRemoteObject implements Document
         if (UserManager.checkUserPermission(username, filePath, "write")) {
             try {
                 Files.write(Paths.get(NFS_MOUNT_POINT, filePath), content.getBytes());
-                NotificationServer.notifyClients("File created/modified: " + filePath);
+                
+                // Notificar al propietario y a los usuarios compartidos
+                String owner = UserManager.getFileOwner(filePath);
+                List<String> sharedUsers = UserManager.getSharedUsers(filePath);
+
+                NotificationServer.notifyClients(owner, "Your document " + filePath + " has been modified.");
+                for (String user : sharedUsers) {
+                    NotificationServer.notifyClients(user, "The document " + filePath + " you have access to has been modified.");
+                }
             } catch (IOException e) {
                 throw new RemoteException("Error writing file", e);
             }

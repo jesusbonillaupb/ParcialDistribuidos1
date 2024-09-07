@@ -1,4 +1,3 @@
-
 package NFS.Modelo;
 
 import java.sql.Connection;
@@ -6,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserManager {
 
@@ -54,5 +55,42 @@ public class UserManager {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static String getFileOwner(String filePath) {
+        String query = "SELECT u.username FROM files f " +
+                       "JOIN users u ON f.owner_id = u.id " +
+                       "WHERE f.path = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, filePath);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("username");
+            }
+            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static List<String> getSharedUsers(String filePath) {
+        String query = "SELECT u.username FROM shared_files sf " +
+                       "JOIN users u ON sf.user_id = u.id " +
+                       "JOIN files f ON sf.file_id = f.id " +
+                       "WHERE f.path = ?";
+        List<String> sharedUsers = new ArrayList<>();
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, filePath);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                sharedUsers.add(rs.getString("username"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sharedUsers;
     }
 }
