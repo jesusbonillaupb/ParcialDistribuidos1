@@ -6,7 +6,6 @@ import NFS.interfaz.RMIDocuments;
 import NFS.interfaz.RMIUsers;
 import NFS.services.UsersService;
 
-
 public class App {
     public static void main(String[] args) {
         try {
@@ -18,7 +17,7 @@ public class App {
             RMIDocuments documentsService = new DocumentsService();
             RMIUsers usersService = new UsersService();
             server.addService("DocService", documentsService);
-            server.addService("UsrService",usersService);
+            server.addService("UsrService", usersService);
 
             // Desplegar todos los servicios
             if (server.deploy()) {
@@ -26,13 +25,12 @@ public class App {
             } else {
                 System.out.println("Error al desplegar los servicios.");
             }
-            
+
             // Despliega el notification server
-            // NotificationServer notificationServer = new NotificationServer();
-            // notificationServer.deploy();
+            NotificationServer notificationServer = new NotificationServer();
+            notificationServer.deploy();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 }
-

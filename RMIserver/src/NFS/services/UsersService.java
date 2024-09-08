@@ -51,6 +51,4 @@ public class UsersService extends UnicastRemoteObject implements RMIUsers{
         Controlador c= new Controlador();
         return c.getRol(id);
     }
-    
-    
 }

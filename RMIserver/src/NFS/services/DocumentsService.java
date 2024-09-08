@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import NFS.interfaz.RMIDocuments;
+import java.util.List;
 
 public class DocumentsService extends UnicastRemoteObject implements RMIDocuments {
 
@@ -36,12 +37,23 @@ public class DocumentsService extends UnicastRemoteObject implements RMIDocument
         if (UserCrud.checkUserPermission(username, filePath, "write")) {
             try {
                 Files.write(Paths.get(NFS_MOUNT_POINT, filePath), content.getBytes());
-                ClientHandler.notifyClients("File created/modified: " + filePath);
+                notifyUsers(filePath);
             } catch (IOException e) {
                 throw new RemoteException("Error writing file", e);
             }
         } else {
             throw new RemoteException("Permission denied");
+        }
+    }
+
+    private void notifyUsers(String filePath) {
+        // Notificar al propietario y a los usuarios compartidos
+        String owner = UserCrud.getFileOwner(filePath);
+        List<String> sharedUsers = UserCrud.getSharedUsers(filePath);
+
+        ClientHandler.notifyClients(owner, "Your document " + filePath + " has been modified.");
+        for (String user : sharedUsers) {
+            ClientHandler.notifyClients(user, "The document " + filePath + " you have access to has been modified.");
         }
     }
 }
