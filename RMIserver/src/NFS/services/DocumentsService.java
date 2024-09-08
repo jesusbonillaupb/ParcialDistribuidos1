@@ -1,14 +1,12 @@
 package NFS.services;
 
 import NFS.Modelo.UserCrud;
-import NFS.Sockets.NotificationServer;
 import NFS.Sockets.ClientHandler;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.List;
 import NFS.interfaz.RMIDocuments;
 
 public class DocumentsService extends UnicastRemoteObject implements RMIDocuments {
