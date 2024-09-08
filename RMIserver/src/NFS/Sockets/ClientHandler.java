@@ -24,37 +24,7 @@ public class ClientHandler extends Thread {
         this.socket = socket;
     }
 
-    public void run() {
-        try {
-            out = new PrintWriter(socket.getOutputStream(), true);
-            synchronized (clientWriters) {
-                clientWriters.add(out);
-            }
-            // Keep the connection open
-            while (true) {
-                // Do nothing, just keep the connection alive
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (out != null) {
-                synchronized (clientWriters) {
-                    clientWriters.remove(out);
-                }
-            }
-            try {
-                socket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    public static void notifyClients(String message) {
-        synchronized (clientWriters) {
-            for (PrintWriter writer : clientWriters) {
-                writer.println(message);
-            }
-        }
-    }
+  
+    
 }
 

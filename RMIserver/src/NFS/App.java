@@ -1,7 +1,6 @@
 package NFS;
 
 import NFS.Sockets.NotificationServer;
-import NFS.services.DocumentsService;
 import NFS.interfaz.RMIDocuments;
 import NFS.interfaz.RMIUsers;
 import NFS.services.UsersService;
@@ -15,9 +14,9 @@ public class App {
             Server server = new Server(ip, port);
 
             // Crear e implementar el servicio DocumentService
-            RMIDocuments documentsService = new DocumentsService();
+            
             RMIUsers usersService = new UsersService();
-            server.addService("DocService", documentsService);
+            
             server.addService("UsrService",usersService);
 
             // Desplegar todos los servicios
