@@ -18,7 +18,6 @@ public class ClientHandler extends Thread {
     public ClientHandler(Socket socket) {
         this.socket = socket;
     }
-
     public void run() {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
@@ -56,4 +55,3 @@ public class ClientHandler extends Thread {
         }
     }
 }
-

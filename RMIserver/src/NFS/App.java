@@ -15,13 +15,10 @@ public class App {
             // Crear e implementar el servicio DocumentService
             
             RMIUsers usersService = new UsersService();
-<<<<<<< HEAD
             server.addService("DocService", documentsService);
             server.addService("UsrService", usersService);
-=======
             
             server.addService("UsrService",usersService);
->>>>>>> 3ab5fc710371df2e08fe19b78021074663057fd1
 
             // Desplegar todos los servicios
             if (server.deploy()) {
