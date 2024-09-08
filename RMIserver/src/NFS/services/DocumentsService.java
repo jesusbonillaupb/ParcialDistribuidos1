@@ -38,15 +38,7 @@ public class DocumentsService extends UnicastRemoteObject implements RMIDocument
         if (UserCrud.checkUserPermission(username, filePath, "write")) {
             try {
                 Files.write(Paths.get(NFS_MOUNT_POINT, filePath), content.getBytes());
-                
-                // Notificar al propietario y a los usuarios compartidos
-                String owner = UserCrud.getFileOwner(filePath);
-                List<String> sharedUsers = UserCrud.getSharedUsers(filePath);
-
-                NotificationServer.notifyClients(owner, "Your document " + filePath + " has been modified.");
-                for (String user : sharedUsers) {
-                    NotificationServer.notifyClients(user, "The document " + filePath + " you have access to has been modified.");
-                }
+                ClientHandler.notifyClients("File created/modified: " + filePath);
             } catch (IOException e) {
                 throw new RemoteException("Error writing file", e);
             }

@@ -231,4 +231,43 @@ public class UserCrud {
             return false;
         }
     }
+    
+    public static String getFileOwner(String filePath) {
+        String query = "SELECT u.username FROM files f " +
+                       "JOIN users u ON f.owner_id = u.id " +
+                       "WHERE f.path = ?";
+        try{
+            con =conectar.con= conectar.getConnection();
+            ps=con.prepareStatement(query);
+            ps.setString(1, filePath);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("username");
+            }
+            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static List<String> getSharedUsers(String filePath) {
+        String query = "SELECT u.username FROM shared_files sf " +
+                       "JOIN users u ON sf.user_id = u.id " +
+                       "JOIN files f ON sf.file_id = f.id " +
+                       "WHERE f.path = ?";
+        List<String> sharedUsers = new ArrayList<>();
+        try {
+            con =conectar.con= conectar.getConnection();
+            ps=con.prepareStatement(query);
+            ps.setString(1, filePath);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                sharedUsers.add(rs.getString("username"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sharedUsers;
+    }
 }
