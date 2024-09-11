@@ -1,10 +1,15 @@
 package NFS;
 
-import NFS.Sockets.NotificationServer;
+
+import NFS.Sockets.ClientHandler;
+import NFS.Sockets.JavaSocket.JavaServerSocket;
+import NFS.Sockets.SocketProcess.SocketServer;
+import NFS.Sockets.SocketProcess.SocketProcess;
 import NFS.services.DocumentsService;
 import NFS.interfaz.RMIDocuments;
 import NFS.interfaz.RMIUsers;
 import NFS.services.UsersService;
+import java.net.ServerSocket;
 
 public class App {
     public static void main(String[] args) {
@@ -14,9 +19,7 @@ public class App {
             Server server = new Server(ip, port);
 
             // Crear e implementar el servicio DocumentService
-            RMIDocuments documentsService = new DocumentsService();
             RMIUsers usersService = new UsersService();
-            server.addService("DocService", documentsService);
             server.addService("UsrService", usersService);
 
             // Desplegar todos los servicios
@@ -26,11 +29,33 @@ public class App {
                 System.out.println("Error al desplegar los servicios.");
             }
 
-            // Despliega el notification server
-            NotificationServer notificationServer = new NotificationServer();
-            notificationServer.deploy();
+           
+            
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        
+        // Aca comienza todo lo que tenga que ver con las notificaciones por medio de sockets
+        JavaServerSocket javaServerSocket = new JavaServerSocket(1802, 100);
+        ServerSocket serverSocket = javaServerSocket.get();
+        if (serverSocket == null) {
+            System.out.println("ServerSocket is null");
+            return;
+        }
+        while (true) {
+            SocketProcess server = new SocketServer(serverSocket);
+
+            if (!server.bind()) {
+                System.out.println("Server bind failed");
+                return;
+            } else {
+                System.out.println("Se conectó un Usuario");
+            }
+
+            // Crear un hilo para manejar al cliente
+            ClientHandler clientHandler = new ClientHandler(server);
+            clientHandler.start();
+            
         }
     }
 }

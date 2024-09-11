@@ -5,8 +5,14 @@
 package NFS.UI;
 
 import NFS.Client;
+import NFS.Sockets.JavaSocket.JavaClientSocket;
+import NFS.Sockets.ServerListener;
+import NFS.Sockets.SocketProcess.SocketClient;
+import NFS.Sockets.SocketProcess.SocketProcess;
 import NFS.UI.vistasAdmin.InicioAdmin;
 import NFS.UI.vistasUsuario.InicioUsuario;
+import java.net.Socket;
+import java.util.ArrayList;
 
 
 
@@ -15,7 +21,8 @@ import NFS.UI.vistasUsuario.InicioUsuario;
  * @author Jesus
  */
 public class Login extends javax.swing.JFrame {
-
+    public static boolean conectado= true;
+    private static SocketProcess SocketCliente;
     /**
      * Creates new form Login
      */
@@ -41,6 +48,8 @@ public class Login extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         lblError = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        btnDesconectar = new javax.swing.JButton();
+        btnNotificacion = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -69,15 +78,26 @@ public class Login extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel5.setText("Contraseña");
 
+        btnDesconectar.setText("Desconectar");
+        btnDesconectar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDesconectarActionPerformed(evt);
+            }
+        });
+
+        btnNotificacion.setText("Enviar notificacion");
+        btnNotificacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNotificacionActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(311, 311, 311)
-                        .addComponent(jLabel2))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(338, 338, 338)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -96,6 +116,17 @@ public class Login extends javax.swing.JFrame {
                             .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
                             .addComponent(txtNombre))))
                 .addGap(295, 295, 295))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(311, 311, 311)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnDesconectar)
+                        .addGap(50, 50, 50))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnNotificacion)
+                        .addGap(34, 34, 34))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -117,6 +148,12 @@ public class Login extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(lblError)
                 .addGap(43, 43, 43))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(btnDesconectar)
+                .addGap(26, 26, 26)
+                .addComponent(btnNotificacion)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -153,6 +190,14 @@ public class Login extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void btnNotificacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotificacionActionPerformed
+        enviarNotificacion(this.SocketCliente);
+    }//GEN-LAST:event_btnNotificacionActionPerformed
+
+    private void btnDesconectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDesconectarActionPerformed
+        desconectar(this.SocketCliente);
+    }//GEN-LAST:event_btnDesconectarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -187,6 +232,32 @@ public class Login extends javax.swing.JFrame {
                 Login vistaInicio = new Login();
                 vistaInicio.setLocationRelativeTo(null); 
                 vistaInicio.setVisible(true);
+                
+                // se inicializa lo de los sockets cambiar todo esto a la vista de archivos
+                JavaClientSocket javaClientSocket = new JavaClientSocket(1802, "localhost");
+                Socket clientSocket = javaClientSocket.get();
+                // 2. Se verifica si el socket que se creó está bien
+                if (clientSocket == null) {
+                    System.out.println("Socket está nulo");
+                    return;
+                } else {
+                    System.out.println("Socket Creado con éxito");
+                }
+                // 3. Se crea el cliente
+                SocketProcess client = new SocketClient(clientSocket);
+                SocketCliente=client;
+                // 4. Se inicia la sesión
+                if (!client.connect()) {
+                    System.out.println("Conexión al servidor fallida");
+                    return;
+                } else {
+                    System.out.println("Conectado al servidor");
+                }
+                
+                new Thread(new ServerListener(client)).start();
+                
+                
+            
             }
         });
     }
@@ -202,8 +273,44 @@ public class Login extends javax.swing.JFrame {
         return client.getRol(id); 
         
     }
+    
+    
+    // todo esto se movera a la vista de archiv
+    
+    
+    public void enviarNotificacion(SocketProcess client){
+        String mensaje = "Archivo agregado, actualizar pagina";
+        if (mensaje.isEmpty()) {
+            return; // No enviar si el mensaje está vacío
+        }
+        
+        ArrayList<Object> dataRequest = new ArrayList<>();
+        dataRequest.add(mensaje);
+        dataRequest.add(0);
+        client.write(dataRequest);
+        
+        if("-/DISCONNECT".equals(mensaje)){
+         this.conectado=false;
+            
+        }
+    }    
+    public void desconectar(SocketProcess client){
+        String mensaje = "-/DISCONNECT";
+        ArrayList<Object> dataRequest = new ArrayList<>();
+        dataRequest.add(mensaje);
+        dataRequest.add(0);
+        client.write(dataRequest);
+         this.conectado=false;
+         if (!client.close()) {
+                    System.out.println("Fallo al cerrar el cliente");
+                }
+                System.out.println("Cliente cerrado");
+                System.exit(0);
+     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDesconectar;
+    private javax.swing.JButton btnNotificacion;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

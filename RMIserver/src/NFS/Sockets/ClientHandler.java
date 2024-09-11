@@ -1,57 +1,74 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package NFS.Sockets;
 
+import NFS.Sockets.SocketProcess.SocketProcess;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.InputStreamReader;
-import java.net.Socket;
-import java.io.BufferedReader;
-import java.util.HashMap;
-import java.util.Map;
+import java.net.SocketException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
+/**
+ *
+ * @author Jesus
+ */
 public class ClientHandler extends Thread {
+    private SocketProcess serverSocket;
+    
+    private static List<ClientHandler> clientes = Collections.synchronizedList(new ArrayList<>());
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    private Socket socket;
-    private PrintWriter out;
-    private String username;
-    private static Map<String, PrintWriter> clientWriters = new HashMap<>();
 
-    public ClientHandler(Socket socket) {
-        this.socket = socket;
+    public ClientHandler(SocketProcess serverSocket) {
+        this.serverSocket = serverSocket;
+        
     }
+
+    @Override
     public void run() {
-        try {
-            out = new PrintWriter(socket.getOutputStream(), true);
-            // Assume the first message from the client is the username
-            username = new BufferedReader(new InputStreamReader(socket.getInputStream())).readLine();
-            synchronized (clientWriters) {
-                clientWriters.put(username, out);
-            }
-            // Keep the connection open
-            while (true) {
-                // Do nothing, just keep the connection alive
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (out != null) {
-                synchronized (clientWriters) {
-                    clientWriters.remove(username);
+        clientes.add(this);
+        while (true) {
+            ArrayList<Object> dataRequest = (ArrayList<Object>) serverSocket.listen();
+            if (dataRequest != null && !dataRequest.isEmpty()) {
+                String mensaje = dataRequest.get(0).toString();
+                
+                if ("-/DISCONNECT".equals(mensaje)) {
+                    break;
                 }
-            }
-            try {
-                socket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+                
+                
+                broadcast(mensaje, this);
+                
             }
         }
+        clientes.remove(this);
     }
 
-    public static void notifyClients(String username, String message) {
-        synchronized (clientWriters) {
-            PrintWriter writer = clientWriters.get(username);
-            if (writer != null) {
-                writer.println(message);
+
+
+    
+
+    private void broadcast(String mensaje, ClientHandler sender) {
+        synchronized (clientes) {
+            for (ClientHandler client : clientes) {
+                client.enviarNotificacion(mensaje); 
             }
-        }
+        }    
     }
+    
+   
+    private void enviarNotificacion(String message) {
+       
+        ArrayList<Object> dataResponse = new ArrayList<>();
+        dataResponse.add(message);
+        dataResponse.add(0);
+        serverSocket.response(dataResponse);
+    }
+    
+
+    
 }
