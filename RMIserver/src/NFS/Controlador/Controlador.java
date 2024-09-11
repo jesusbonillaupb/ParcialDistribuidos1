@@ -1,8 +1,11 @@
 
 package NFS.Controlador;
 
+import NFS.Modelo.File;
+import NFS.Modelo.FileCrud;
 import NFS.Modelo.User;
 import NFS.Modelo.UserCrud;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +15,7 @@ import java.util.List;
  */
 public class Controlador {
     UserCrud crudUs =new UserCrud();
-    
+    FileCrud crudFile =new FileCrud();
     
     public List<Object[]> listar() {
         List<Object[]> datos = new ArrayList<>();
@@ -50,6 +53,8 @@ public class Controlador {
     public boolean eliminarUsuario(int id){
         return crudUs.borrar(id);                        
     }
+    
+    
     public String getRol(int id){
         List<Object[]> datos = new ArrayList<>();
         List<User> lista = crudUs.rolUsuario(id);
@@ -60,5 +65,34 @@ public class Controlador {
             
             return lista.get(0).getRole();
         }
+    }
+    // 
+    public boolean agregarArchivo(byte[] fileData,String tipo, String nombre, String autor, String ruta, String rutaCarpeta, String privacidad ){
+       if(crudFile.upload(nombre, fileData,ruta)){
+           if(crudFile.agregar(tipo, nombre,autor,ruta,rutaCarpeta,privacidad)){
+               return true;
+           }else{
+               return false;
+           }
+       }else return false;
+                               
+    }
+    
+    
+    public List<Object[]> listarArchivosCarpeta(String rutaCarpeta) {
+        List<Object[]> datos = new ArrayList<>();
+        List<File> lista = crudFile.listarCarpeta(rutaCarpeta);
+
+        for (File file : lista) {
+            Object[] fila = new Object[5];
+            fila[0] = file.getId();
+            fila[1] = file.getTipo();
+            fila[2] = file.getNombre();
+            fila[3] =file.getAutor();
+            fila[4] =file.getRuta();
+            datos.add(fila);
+        }
+
+        return datos;
     }
 }

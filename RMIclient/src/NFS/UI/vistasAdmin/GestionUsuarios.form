@@ -44,7 +44,6 @@
                           <Group type="103" alignment="0" groupAlignment="1" attributes="0">
                               <Component id="btnAgregar" min="-2" pref="225" max="-2" attributes="0"/>
                               <Component id="btnModificar" alignment="1" min="-2" pref="225" max="-2" attributes="0"/>
-                              <Component id="btnEliminar" alignment="1" min="-2" pref="225" max="-2" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
@@ -65,6 +64,10 @@
                                       <Component id="txtPassword" alignment="1" pref="154" max="32767" attributes="0"/>
                                       <Component id="txtNombre" alignment="1" pref="154" max="32767" attributes="0"/>
                                   </Group>
+                              </Group>
+                              <Group type="103" alignment="1" groupAlignment="0" attributes="0">
+                                  <Component id="lblError" alignment="0" min="-2" pref="217" max="-2" attributes="0"/>
+                                  <Component id="btnEliminar" alignment="1" min="-2" pref="225" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -132,7 +135,9 @@
                       <Component id="btnEliminar" min="-2" pref="42" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="31" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="lblError" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -300,8 +305,8 @@
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="2">
-            <StringItem index="0" value="Usuario"/>
-            <StringItem index="1" value="Admin"/>
+            <StringItem index="0" value="Empleado"/>
+            <StringItem index="1" value="Cliente"/>
           </StringArray>
         </Property>
       </Properties>
@@ -325,6 +330,15 @@
       <Properties>
         <Property name="horizontalAlignment" type="int" value="4"/>
         <Property name="text" type="java.lang.String" value="Nombre usuario"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblError">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Segoe UI" size="14" style="1"/>
+        </Property>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="error"/>
       </Properties>
     </Component>
   </SubComponents>

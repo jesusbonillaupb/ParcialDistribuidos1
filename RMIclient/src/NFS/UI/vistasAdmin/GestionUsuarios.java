@@ -16,12 +16,13 @@ import javax.swing.table.DefaultTableModel;
 public class GestionUsuarios extends javax.swing.JFrame {
     private int id;
     private String nombre;
-    
+    private String sltRol ="N/A";
     public GestionUsuarios(int id, String nombre) {
         this.id=id;
         this.nombre=nombre; 
         initComponents();
         lblNombre.setText(nombre);
+        lblError.setVisible(false);
         
         
     }
@@ -49,6 +50,7 @@ public class GestionUsuarios extends javax.swing.JFrame {
         cmbRol = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
         lblNombre = new javax.swing.JLabel();
+        lblError = new javax.swing.JLabel();
 
         jTextField3.setText("jTextField3");
 
@@ -133,7 +135,7 @@ public class GestionUsuarios extends javax.swing.JFrame {
             }
         });
 
-        cmbRol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Usuario", "Admin" }));
+        cmbRol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Empleado", "Cliente" }));
         cmbRol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbRolActionPerformed(evt);
@@ -146,6 +148,10 @@ public class GestionUsuarios extends javax.swing.JFrame {
 
         lblNombre.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblNombre.setText("Nombre usuario");
+
+        lblError.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblError.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblError.setText("error");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -164,7 +170,6 @@ public class GestionUsuarios extends javax.swing.JFrame {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(layout.createSequentialGroup()
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
@@ -179,7 +184,10 @@ public class GestionUsuarios extends javax.swing.JFrame {
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(cmbRol, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(txtPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
-                                        .addComponent(txtNombre, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)))))
+                                        .addComponent(txtNombre, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblError, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnEliminar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(0, 25, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -229,7 +237,9 @@ public class GestionUsuarios extends javax.swing.JFrame {
                         .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblError)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -264,14 +274,24 @@ public class GestionUsuarios extends javax.swing.JFrame {
         if(lblId.getText().equals("N/A")){
             System.out.println("Selecione un usuario de la tabla");
         }else{
+            
              if(!txtNombre.getText().isEmpty() && !txtPassword.getText().isEmpty() ){
-                 if(actualizarUsuario(Integer.parseInt(lblId.getText()), txtNombre.getText(), txtPassword.getText(),rolSelect)){
-                    lblId.setText("N/A");
-                    listarUsuarios();
-                    txtNombre.setText("");
-                    txtPassword.setText("");
+                 if(!sltRol.equals("Admin")){
+                    if(actualizarUsuario(Integer.parseInt(lblId.getText()), txtNombre.getText(), txtPassword.getText(),rolSelect)){
+                       lblId.setText("N/A");
+                       listarUsuarios();
+                       txtNombre.setText("");
+                       txtPassword.setText("");
+                    }else{
+                        System.out.println("hubo un error actualizando el usuario");   
+                    }
                  }else{
-                     System.out.println("hubo un error actualizando el usuario");   
+                lblError.setText("No se puede modificar al admin");
+                lblError.setVisible(true);
+                lblId.setText("N/A");
+                listarUsuarios();
+                txtNombre.setText("");
+                txtPassword.setText("");
                  }
              }else{
                  System.out.println("llena todos los campos");
@@ -289,23 +309,35 @@ public class GestionUsuarios extends javax.swing.JFrame {
         txtNombre.setText(modelo.getValueAt(i, 1).toString());
         txtPassword.setText(modelo.getValueAt(i, 2).toString());
         cmbRol.setSelectedItem(modelo.getValueAt(i, 3).toString());
+        sltRol=modelo.getValueAt(i, 3).toString();
+        
         
     }//GEN-LAST:event_tablaMouseClicked
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        
         if(lblId.getText().equals("N/A")){
             System.out.println("Selecione un usuario de la tabla");
         }else{
-            if(eliminarUsuario(Integer.parseInt(lblId.getText()))){
-                    lblId.setText("N/A");
-                    listarUsuarios();
-                    txtNombre.setText("");
-                    txtPassword.setText("");
-                }else{
-                    System.out.println("hubo un error actualizando el usuario");
+            if(!sltRol.equals("Admin")){
+                if(eliminarUsuario(Integer.parseInt(lblId.getText()))){
+                        lblId.setText("N/A");
+                        listarUsuarios();
+                        txtNombre.setText("");
+                        txtPassword.setText("");
+                    }else{
+                        System.out.println("hubo un error actualizando el usuario");
 
-                } 
-            
+                    } 
+            }
+            else{
+                lblError.setText("No se puede borrar al admin");
+                lblError.setVisible(true);
+                lblId.setText("N/A");
+                listarUsuarios();
+                txtNombre.setText("");
+                txtPassword.setText("");
+            }
             
         } 
     }//GEN-LAST:event_btnEliminarActionPerformed
@@ -368,6 +400,7 @@ public class GestionUsuarios extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JLabel lblError;
     private javax.swing.JLabel lblId;
     private javax.swing.JLabel lblNombre;
     public javax.swing.JTable tabla;

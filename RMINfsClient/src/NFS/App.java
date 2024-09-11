@@ -1,28 +1,24 @@
 package NFS;
 
+import NFS.InterfazArchivos.RMINfs;
+import NFS.services.NfsService;
 
-import NFS.Sockets.ClientHandler;
-import NFS.Sockets.JavaSocket.JavaServerSocket;
-import NFS.Sockets.SocketProcess.SocketServer;
-import NFS.Sockets.SocketProcess.SocketProcess;
-import NFS.services.FileService;
-import NFS.interfaz.RMIUsers;
-import NFS.services.UsersService;
-import java.net.ServerSocket;
-import NFS.interfaz.RMIFiles;
+
+
 
 public class App {
     public static void main(String[] args) {
         try {
             String ip = "localhost";
-            String port = "1099";
+            String port = "4000";
             Server server = new Server(ip, port);
-
+            
             // Crear e implementar el servicio DocumentService
-            RMIUsers usersService = new UsersService();
-            server.addService("UsrService", usersService);
-            RMIFiles fileService = new FileService();
-            server.addService("FileService", fileService);
+            RMINfs nfsService = new NfsService();
+            
+            
+            server.addService("NfsService", nfsService);
+            
             
 
             // Desplegar todos los servicios

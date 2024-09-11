@@ -28,6 +28,18 @@ CREATE TABLE IF NOT EXISTS `sgd`.`usuarios` (
   PRIMARY KEY (`idUsuario`))
 ENGINE = InnoDB;
 
+
+
+CREATE TABLE archivos (
+    idArchivo INT AUTO_INCREMENT PRIMARY KEY,
+    tipo VARCHAR(100) NOT NULL,
+    nombre VARCHAR(100) NOT NULL,       
+    autor VARCHAR(100) NOT NULL,
+	  ruta VARCHAR(255) NOT NULL,
+    rutaCarpeta VARCHAR(255) NOT NULL,
+	  privacidad VARCHAR(255) NOT NULL
+);
+
 INSERT INTO usuarios (usNombre, usPassword,usRol) VALUES ("jesus", "jesus123","Admin");
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

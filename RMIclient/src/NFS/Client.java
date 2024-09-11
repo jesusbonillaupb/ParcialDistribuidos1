@@ -1,5 +1,6 @@
 package NFS;
 
+import NFS.interfaz.RMIFiles;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -75,6 +76,26 @@ public class Client {
         try {
             RMIUsers usrService = (RMIUsers) Naming.lookup(this.url);
             return usrService.getUsuarios();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public boolean uploadFlie(byte[] fileData,String tipo, String nombre, String autor, String ruta, String rutaCarpeta, String privacidad ) {
+        try {
+            RMIFiles filesService = (RMIFiles) Naming.lookup(this.url);
+            return filesService.addFile(fileData, tipo, nombre, autor, ruta, rutaCarpeta, privacidad);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public List<Object[]> getCarpetaCont(String rutaCarpeta) {
+        try {
+            RMIFiles filesService = (RMIFiles) Naming.lookup(this.url);
+            return filesService.getFolderFiles(rutaCarpeta);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -178,10 +178,11 @@ public class Login extends javax.swing.JFrame {
                     this.setVisible(false);
                     inicioAdmin.setLocationRelativeTo(null); 
                     inicioAdmin.setVisible(true);
-                }else if(getRole(id).equals("Usuario")){
-                    System.out.println("Bienvenido Usuario");
-                    InicioUsuario inicioUsuario= new InicioUsuario(id,txtNombre.getText(),"Usuario");
+                }else if(getRole(id).equals("Empleado")||getRole(id).equals("Cliente")){
+                    System.out.println("Bienvenido");
+                    InicioUsuario inicioUsuario= new InicioUsuario(id,txtNombre.getText(),getRole(id),"D:\\Escritorio\\Archivos");
                     this.setVisible(false);
+                    inicioUsuario.listarArchivos();
                     inicioUsuario.setLocationRelativeTo(null); 
                     inicioUsuario.setVisible(true);
                 }
@@ -191,11 +192,11 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnNotificacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotificacionActionPerformed
-        enviarNotificacion(this.SocketCliente);
+        // enviarNotificacion(this.SocketCliente);
     }//GEN-LAST:event_btnNotificacionActionPerformed
 
     private void btnDesconectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDesconectarActionPerformed
-        desconectar(this.SocketCliente);
+        // desconectar(this.SocketCliente);
     }//GEN-LAST:event_btnDesconectarActionPerformed
 
     /**
@@ -232,7 +233,7 @@ public class Login extends javax.swing.JFrame {
                 Login vistaInicio = new Login();
                 vistaInicio.setLocationRelativeTo(null); 
                 vistaInicio.setVisible(true);
-                
+                /*
                 // se inicializa lo de los sockets cambiar todo esto a la vista de archivos
                 JavaClientSocket javaClientSocket = new JavaClientSocket(1802, "localhost");
                 Socket clientSocket = javaClientSocket.get();
@@ -255,7 +256,7 @@ public class Login extends javax.swing.JFrame {
                 }
                 
                 new Thread(new ServerListener(client)).start();
-                
+                */
                 
             
             }

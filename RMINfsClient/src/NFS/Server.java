@@ -6,7 +6,6 @@ import java.rmi.Remote;
 import java.util.HashMap;
 import java.util.Map;
 
-import NFS.interfaz.RMIFiles;
 
 public class Server {
     private String ip;
