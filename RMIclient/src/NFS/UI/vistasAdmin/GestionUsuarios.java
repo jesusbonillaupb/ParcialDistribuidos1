@@ -323,7 +323,7 @@ public class GestionUsuarios extends javax.swing.JFrame {
    
     public boolean agregarUsuario(String nombre, String password,String rol){
        Client client = new Client("localhost", "1099", "UsrService");
-       return client.RegisterUser(nombre, password,rol);
+       return client.registerUser(nombre, password,rol);
     }
     
     public boolean eliminarUsuario(int id){
