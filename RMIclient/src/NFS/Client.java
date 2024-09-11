@@ -13,11 +13,11 @@ import java.util.List;
 public class Client {
 
     private String url;
-    private String username;
+   
 
-    public Client(String ip, String port, String serviceName,String username) {
+    public Client(String ip, String port, String serviceName) {
         this.url = "rmi://" + ip + ":" + port + "/" + serviceName;
-        this.username = username;
+        
     }
 
   
@@ -101,4 +101,6 @@ public class Client {
         }
         return null;
     }
+
+    
 }
